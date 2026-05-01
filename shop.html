@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Crocheté</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-icon">
+                <img src="images/homeicon.png" alt="Home icon" class="nav-icon-image">
+            </a>
+            <a href="shop.html" class="nav-link">SHOP</a>
+            <a href="sellers.html" class="nav-link">SELLERS</a>
+            <a href="cart.html" class="nav-link">CART</a>
+            <a href="login.html" class="nav-link">ACCOUNT</a>
+        </div>
+    </nav>
+
+    <div class="shop-container">
+        <aside class="sidebar">
+            <button class="sidebar-btn">PRODUCTS</button>
+            <button class="sidebar-btn">CATEGORY</button>
+            <button class="sidebar-btn">[LOREM IPSUM]</button>
+            <button class="sidebar-btn">[LOREM IPSUM]</button>
+            <button class="sidebar-btn">[LOREM IPSUM]</button>
+        </aside>
+
+        <main class="shop-main">
+            <div class="shop-header">
+                <div class="shop-tabs">
+                    <button class="tab-btn active">PRODUCTS</button>
+                    <button class="tab-btn-white">SEARCH</button>
+                </div>
+                <div class="shop-search">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <span class="filter-label">FILTER</span>
+                <input type="text" class="filter-input" placeholder="Filter">
+            </div>
+
+            <div class="product-grid">
+                <a href="product.html?id=1" class="product-card">
+                    <div class="product-image">
+                        <img src="images/sweater.png" alt="Crocheted sweater" class="product-thumb">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">CROCHETED SWEATER</p>
+                        <p class="product-price">PHP500</p>
+                    </div>
+                </a>
+
+                <a href="product.html?id=2" class="product-card">
+                    <div class="product-image">
+                        <img src="images/booties.png" alt="Baby booties" class="product-thumb">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">BABY BOOTIES</p>
+                        <p class="product-price">PHP250</p>
+                    </div>
+                </a>
+
+                <a href="product.html?id=3" class="product-card">
+                    <div class="product-image">
+                        <img src="images/flower.png" alt="Crocheted flower" class="product-thumb">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">CROCHET FLOWER</p>
+                        <p class="product-price">PHP120</p>
+                    </div>
+                </a>
+
+                <a href="product.html?id=4" class="product-card">
+                    <div class="product-image">
+                        <img src="images/basket.png" alt="Crocheted basket" class="product-thumb">
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">KNIT BASKET</p>
+                        <p class="product-price">PHP400</p>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
