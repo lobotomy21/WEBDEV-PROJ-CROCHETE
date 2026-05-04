@@ -1,4 +1,3 @@
-
 // CROCHET MARKETPLACE - JAVASCRIPT dlkafjdlka;skf aniamlkadlfkadflalaldflallllllll chuhcubangbang bububu
 
 
@@ -48,9 +47,6 @@ function initializePage() {
 
 
 function initializeShopPage() {
-    // Render any seller-uploaded products first
-    renderShopProducts();
-
     // Add search functionality
     const searchInput = document.querySelector('.search-input');
     if (searchInput) {
@@ -64,8 +60,9 @@ function initializeShopPage() {
             filterProducts(this.textContent);
         });
     });
-    
-    // Add to cart buttons
+
+    // Render seller-uploaded products THEN attach cart buttons to ALL cards
+    renderShopProducts();
     addCartButtons();
 }
 
@@ -176,7 +173,14 @@ function renderCartPage() {
         card.className = 'cart-card';
 
         const image = document.createElement('img');
-        image.src = item.image || 'images/flower.png';
+        // If image wasn't stored (base64 seller photo), look it up from sellerProducts by ID
+        let imgSrc = item.image;
+        if (!imgSrc) {
+            const sellerProducts = getSellerProducts();
+            const match = sellerProducts.find(p => String(p.id) === String(item.id));
+            imgSrc = match ? match.image : 'images/flower.png';
+        }
+        image.src = imgSrc;
         image.alt = item.name;
         image.className = 'cart-card-image';
 
@@ -219,7 +223,15 @@ function renderCartPage() {
 }
 
 function removeCartItem(itemToRemove) {
-    cart = cart.filter(item => item.id !== itemToRemove.id || item.name !== itemToRemove.name || item.price !== itemToRemove.price);
+    // Find and remove only ONE instance of the item, not all of them
+    const index = cart.findIndex(item => 
+        String(item.id) === String(itemToRemove.id) &&
+        item.name === itemToRemove.name &&
+        item.price === itemToRemove.price
+    );
+    if (index !== -1) {
+        cart.splice(index, 1);
+    }
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     renderCartPage();
@@ -249,17 +261,19 @@ function filterProducts(category) {
 function addCartButtons() {
     const productCards = document.querySelectorAll('.product-card');
     productCards.forEach(card => {
-        if (card.querySelector('button')) return;
+        // Skip if already has an Add to Cart button
+        if (card.querySelector('.add-to-cart-btn')) return;
 
         const addToCartBtn = document.createElement('button');
         addToCartBtn.textContent = 'ADD TO CART';
-        addToCartBtn.className = 'btn-primary';
+        addToCartBtn.className = 'btn-primary add-to-cart-btn';
         addToCartBtn.style.marginTop = '0.5rem';
         addToCartBtn.style.fontSize = '0.7rem';
         addToCartBtn.style.padding = '0.5rem 1rem';
         
         addToCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             const product = getProductFromCard(card);
             if (product) {
                 addToCart(product);
@@ -293,7 +307,13 @@ function getProductFromCard(card) {
 
 
 function addToCart(product) {
-    cart.push(product);
+    const cartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image && product.image.startsWith('data:') ? null : (product.image || 'images/flower.png')
+    };
+    cart.push(cartItem);
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     showSuccessMessage(`Product added to cart: ${product.name}`);
@@ -308,6 +328,9 @@ function updateCartCount() {
 }
 
 function showSuccessMessage(message) {
+    // Remove any existing success messages to prevent pile-up
+    document.querySelectorAll('.success-message').forEach(el => el.remove());
+
     const messageDiv = document.createElement('div');
     messageDiv.className = 'success-message';
     messageDiv.textContent = message;
@@ -327,7 +350,13 @@ function initializeLoginPage() {
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
-    
+
+    // Sign up form
+    const signupForm = document.querySelector('.signup-form');
+    if (signupForm) {
+        signupForm.addEventListener('submit', handleSignup);
+    }
+
     // Social login buttons
     const socialBtns = document.querySelectorAll('.social-btn');
     socialBtns.forEach(btn => {
@@ -339,24 +368,105 @@ function initializeLoginPage() {
     });
 }
 
+// Helper: get registered users from localStorage
+function getRegisteredUsers() {
+    return JSON.parse(localStorage.getItem('registeredUsers')) || [];
+}
+
+// Helper: save registered users to localStorage
+function saveRegisteredUsers(users) {
+    localStorage.setItem('registeredUsers', JSON.stringify(users));
+}
+
+// Helper: show an error message (auto-removes after 3s)
+function showErrorMessage(message) {
+    // Remove any existing error messages first
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'error-message';
+    messageDiv.textContent = message;
+
+    // Style it inline so it works without extra CSS
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #e74c3c;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    `;
+
+    document.body.appendChild(messageDiv);
+    setTimeout(() => messageDiv.remove(), 3000);
+}
+
 function handleLogin(e) {
     e.preventDefault();
-    
+
     const inputs = e.target.querySelectorAll('.login-input');
-    const username = inputs[0].value;
-    const password = inputs[1].value;
-    
+    const username = inputs[0].value.trim();
+    const password = inputs[1].value.trim();
+
     // Basic validation
     if (!username || !password) {
-        alert('Please fill in all fields');
+        showErrorMessage('Please fill in all fields.');
         return;
     }
-    
-    // Simulate login
-    showSuccessMessage('Login successful!');
+
+    const users = getRegisteredUsers();
+    const matchedUser = users.find(
+        user => user.username === username && user.password === password
+    );
+
+    if (!matchedUser) {
+        // Check if username even exists
+        const userExists = users.find(user => user.username === username);
+        if (!userExists) {
+            showErrorMessage('Account not found. Please sign up first.');
+        } else {
+            showErrorMessage('Incorrect password. Please try again.');
+        }
+        return;
+    }
+
+    // Login success
+    showSuccessMessage('Sign in successfully!');
     setTimeout(() => {
         window.location.href = 'index.html';
     }, 1500);
+}
+
+function handleSignup(e) {
+    e.preventDefault();
+
+    const inputs = e.target.querySelectorAll('.login-input, .signup-input');
+    const username = inputs[0].value.trim();
+    const password = inputs[1].value.trim();
+
+    if (!username || !password) {
+        showErrorMessage('Please fill in all fields.');
+        return;
+    }
+
+    const users = getRegisteredUsers();
+    const alreadyExists = users.find(user => user.username === username);
+
+    if (alreadyExists) {
+        showErrorMessage('Username already taken. Please choose another.');
+        return;
+    }
+
+    // Register new user
+    users.push({ username, password });
+    saveRegisteredUsers(users);
+
+    showSuccessMessage(`Account created for "${username}"! You can now log in.`);
+    e.target.reset();
 }
 
 
@@ -407,7 +517,7 @@ function handleSellItem(e) {
         name: formInputs[0].value,
         category: formInputs[1].value,
         size: formInputs[2].value,
-        price: formInputs[3].value,
+        price: Number(formInputs[3].value),
         description: formInputs[4].value,
         image: currentSellerImage || 'images/flower.png'
     };
