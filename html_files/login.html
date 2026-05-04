@@ -20,36 +20,85 @@
     </nav>
 
     <div class="login-container">
-        <div class="login-header">
-            <a class="btn-primary">LOGIN</a>
+
+        <!-- LOGIN FORM -->
+        <div id="login-section">
+            <div class="login-header">
+                <a class="btn-primary">LOGIN</a>
+            </div>
+
+            <form class="login-form">
+                <input type="text" placeholder="USERNAME" class="login-input">
+                <input type="password" placeholder="PASSWORD" class="login-input">
+
+                <button type="submit" class="login-submit-btn">LOG IN</button>
+
+                <div class="forgot-password">
+                    <a href="#" class="forgot-link">FORGOT PASSWORD</a>
+                </div>
+
+                <div class="divider-text">
+                    <div class="line"></div>
+                    <span class="or-text">OR</span>
+                    <div class="line"></div>
+                </div>
+
+                <div class="social-buttons">
+                    <button type="button" class="social-btn">FACEBOOK</button>
+                    <button type="button" class="social-btn">GOOGLE</button>
+                </div>
+
+                <div class="signup-link">
+                    <a href="#" class="signup-text" id="show-signup">SIGN UP</a>
+                </div>
+            </form>
         </div>
 
-        <form class="login-form">
-            <input type="text" placeholder="PHONE NUMBER / USERNAME / EMAIL" class="login-input">
-            <input type="password" placeholder="PASSWORD" class="login-input">
-
-            <button type="submit" class="login-submit-btn">LOG IN</button>
-
-            <div class="forgot-password">
-                <a href="#" class="forgot-link">FORGOT PASSWORD</a>
+        <!-- SIGNUP FORM -->
+        <div id="signup-section" style="display: none;">
+            <div class="login-header">
+                <a class="btn-primary">SIGN UP</a>
             </div>
 
-            <div class="divider-text">
-                <div class="line"></div>
-                <span class="or-text">OR</span>
-                <div class="line"></div>
-            </div>
+            <form class="signup-form">
+                <input type="text" placeholder="USERNAME" class="login-input">
+                <input type="password" placeholder="PASSWORD" class="login-input">
 
-            <div class="social-buttons">
-                <button type="button" class="social-btn">FACEBOOK</button>
-                <button type="button" class="social-btn">GOOGLE</button>
-            </div>
+                <button type="submit" class="login-submit-btn">CREATE ACCOUNT</button>
 
-            <div class="signup-link">
-                <a href="#" class="signup-text">SIGN UP</a>
-            </div>
-        </form>
+                <div class="signup-link" style="margin-top: 1rem;">
+                    <a href="#" class="signup-text" id="show-login">BACK TO LOGIN</a>
+                </div>
+            </form>
+        </div>
+
     </div>
+
+    <script>
+        // Toggle between login and signup views
+        document.addEventListener('DOMContentLoaded', function () {
+            const showSignup = document.getElementById('show-signup');
+            const showLogin = document.getElementById('show-login');
+            const loginSection = document.getElementById('login-section');
+            const signupSection = document.getElementById('signup-section');
+
+            if (showSignup) {
+                showSignup.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    loginSection.style.display = 'none';
+                    signupSection.style.display = 'block';
+                });
+            }
+
+            if (showLogin) {
+                showLogin.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    signupSection.style.display = 'none';
+                    loginSection.style.display = 'block';
+                });
+            }
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
