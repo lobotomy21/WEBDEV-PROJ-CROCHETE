@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Crocheté</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-icon">
+                <img src="images/homeicon.png" alt="Home icon" class="nav-icon-image">
+            </a>
+            <a href="shop.html" class="nav-link">SHOP</a>
+            <a href="sellers.html" class="nav-link">SELLERS</a>
+            <a href="cart.html" class="nav-link">CART</a>
+            <a href="login.html" class="nav-link">ACCOUNT</a>
+        </div>
+    </nav>
+
+    <div class="product-detail-container">
+        <button class="btn-primary back-btn" onclick="history.back()">BACK</button>
+        <div class="product-search-bar">
+            <button class="tab-btn active">PRODUCTS</button>
+            <input type="text" placeholder="SEARCH" class="search-input">
+        </div>
+        <div class="divider"></div>
+
+        <div class="product-detail-grid">
+            <div class="product-detail-image">
+                <img src="images/sweater.png" alt="Crocheted sweater" class="product-detail-thumb">
+            </div>
+
+            <div class="product-detail-info">
+                <h1 class="product-title">CROCHETED SWEATER</h1>
+
+                <div class="product-details">
+                    <p class="detail-item">PRICE: $25</p>
+                    <p class="detail-item">SELLER: SARAH'S STITCHERY</p>
+                    <p class="detail-description">
+                        A STYLISH AND DURABLE CROCHET TOTE BAG FOR EVERYDAY USE.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
